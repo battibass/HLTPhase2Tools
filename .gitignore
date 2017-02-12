@@ -1,33 +1,10 @@
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+# Python
+__init__.py
+*.pyc
 
-# Precompiled Headers
-*.gch
+# Root
+*.root
 *.pch
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
+# Emacs
+*~
