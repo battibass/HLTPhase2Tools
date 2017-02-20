@@ -113,6 +113,20 @@ def customiseMuonValidation(process):
         process.globalPrevalidationMuons.replace(process.glbMuonTrackVMuonAssoc, 
                                                  process.glbMuonTrackVMuonAssoc + process.muonValidationHLTPhase2_seq)
 
+    if hasattr(process,"postValidation") and \
+       hasattr(process,"recoMuonPostProcessors") :
+
+        process.load("Validation.RecoMuon.PostProcessorHLT_cff")
+
+        if hasattr(process,"postValidation") :
+            print "[customiseMuonValidation] Add HLT validation modules to offline muon validation harvesting"
+
+            process.muonRecoHltPostProcessors_seq = cms.Sequence( process.recoMuonPostProcessors
+                                                                  + process.recoMuonPostProcessorsHLT )
+
+            process.postValidation.replace( process.recoMuonPostProcessors,
+                                            process.muonRecoHltPostProcessors_seq )
+
     return process
 
 
