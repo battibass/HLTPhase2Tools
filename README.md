@@ -35,6 +35,8 @@ cmsDriver.py SingleMuPt100_pythia8_cfi  --conditions auto:phase2_realistic -n 10
 cmsDriver.py step2 --conditions auto:phase2_realistic -s DIGI:pdigi_valid,L1,DIGI2RAW,HLT:User --datatier GEN-SIM-DIGI-RAW -n -1 --geometry Extended2023D4 --era Phase2C2 --eventcontent FEVTDEBUGHLT --filein=file:SingleMuPt100_pythia8_cfi_GEN_SIM.root --fileout=file:step2.root --customise HLTrigger/Phase2/customiseMuonsForPhase2.customiseMuons
 
 cmsDriver.py step3  --conditions auto:phase2_realistic -n -1 --era Phase2C2 --eventcontent FEVTDEBUGHLT,MINIAODSIM,DQM --runUnscheduled  -s RAW2DIGI,L1Reco,RECO,PAT,VALIDATION:@phase2Validation+@miniAODValidation,DQM:@phase2+@miniAODDQM --datatier GEN-SIM-RECO,MINIAODSIM,DQMIO --geometry Extended2023D4 --filein=file:step2.root --fileout=file:step3.root --customise HLTrigger/Phase2/customiseMuonsForPhase2.customiseMuonValidation
+
+cmsDriver.py step4 --conditions auto:phase2_realistic -s HARVESTING:@phase2Validation+@phase2+@miniAODValidation+@miniAODDQM --era Phase2C2 --filein file:step3_inDQM.root --scenario pp --filetype DQM --geometry Extended2023D4 --mc -n 500 --customise HLTrigger/Phase2/customiseMuonsForPhase2.customiseMuonValidation
 ```
 
 
