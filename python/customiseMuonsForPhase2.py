@@ -36,23 +36,20 @@ def customiseL1Seeds(process):
 
 def addGemsToL2(process):
    
-    if hasattr(process,"HLTMuonLocalRecoSequence") :
-        print "[addGemsToL2] Add GEM and ME0 local reco to HLTMuonLocalRecoSequence"
-
-        process.load("HLTrigger.Phase2.hlt_gem_local_reco_cff")
-
-        process.HLTMuonLocalRecoPhase2Sequence = cms.Sequence( process.HLTMuonLocalRecoSequence
-                                                               + process.HLTMuonGemLocalRecoSequence )
-
-        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, process.hltRpcRecHits + process.HLTMuonGemLocalRecoSequence)
-
-        if hasattr(process,"muonDetIdAssociator") :
+    if hasattr(process,"muonDetIdAssociator") :
             print "[addGemsToL2] Enable GEM and ME0 in muonDetIdAssociator"
 
             process.muonDetIdAssociator.includeGEM = True
             process.muonDetIdAssociator.includeME0 = True
 
-        if hasattr(process,"hltL2Muons") :
+    if hasattr(process,"HLTMuonLocalRecoSequence") :
+        print "[addGemsToL2] Add GEM and ME0 local reco to HLTMuonLocalRecoSequence"
+
+        process.load("HLTrigger.Phase2.hlt_gem_local_reco_cff")
+
+        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, process.hltRpcRecHits + cms.ignore(process.HLTMuonGemLocalRecoSequence))
+
+    if hasattr(process,"hltL2Muons") :
             print "[addGemsToL2] Enable GEM and ME0 in hltL2Muons"
 
             process.hltL2Muons.L2TrajBuilderParameters.FilterParameters.EnableGEMMeasurement = cms.bool(True) 
