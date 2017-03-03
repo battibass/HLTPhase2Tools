@@ -1,10 +1,12 @@
 import FWCore.ParameterSet.Config as cms
+import HLTrigger.Phase2.customiseTrackingForPhase2 as tracking
 
 def customiseMuons(process):
 
     process = customiseL1Unpacking(process)
     process = customiseL1Seeds(process)
     process = addGemsToL2(process)
+    process = tracking.customiseTracking(process)
     process = removeHLTIsoMu24Steps(process)
     process = addTrigReport(process)
 
@@ -47,7 +49,7 @@ def addGemsToL2(process):
 
         process.load("HLTrigger.Phase2.hlt_gem_local_reco_cff")
 
-        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, process.hltRpcRecHits + cms.ignore(process.HLTMuonGemLocalRecoSequence))
+        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, process.hltRpcRecHits + process.HLTMuonGemLocalRecoSequence)
 
     if hasattr(process,"hltL2Muons") :
             print "[addGemsToL2] Enable GEM and ME0 in hltL2Muons"
@@ -70,6 +72,9 @@ def removeHLTIsoMu24Steps(process):
     if hasattr(process,"HLT_IsoMu24_v4") :
         print "[removeHLTIsoMu24Steps] Removing steps not yet migrated to Phase2"
     
+        process.HLT_IsoMu24_v4.replace(process.HLTL2muonrecoSequence, process.HLTL2muonrecoSequence \
+                                                                      + process.HLTDoLocalPixelSequence \
+                                                                      + process.HLTDoLocalStripSequence)
         process.HLT_IsoMu24_v4.remove(process.HLTL3muonrecoSequence)
         process.HLT_IsoMu24_v4.remove(process.hltL3fL1sMu22L1f0L2f10QL3Filtered24Q)
         process.HLT_IsoMu24_v4.remove(process.HLTMu24IsolationSequence)
