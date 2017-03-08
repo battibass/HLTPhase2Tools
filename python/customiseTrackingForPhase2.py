@@ -4,7 +4,8 @@ def customiseTracking(process):
 
     process = customisePixelLocalReco(process)
     process = customiseStripLocalReco(process)
-
+    process = customiseTrackClusterRemoval(process)
+    process = customiseTrackerEventProducer(process)
     return process
 
 
@@ -65,6 +66,7 @@ def customiseStripLocalReco(process):
 
         process.hltSiStripClusters.Phase2TrackerCluster1DProducer = cms.string('hltSiPhase2Clusters')
         process.hltSiStripClusters.inactivePixelDetectorLabels = []
+        #process.hltSiStripClusters.inactiveStripDetectorLabels = []
         process.hltSiStripClusters.stripClusterProducer = ''
 
     process.load("RecoLocalTracker.Phase2TrackerRecHits.Phase2StripCPEGeometricESProducer_cfi")
@@ -83,3 +85,101 @@ def customiseStripLocalReco(process):
                                                 process.hltSiPhase2Clusters)
  
     return process
+
+
+def customiseTrackClusterRemoval(process):
+        
+    if hasattr(process,"hltIter2HighPtTkMuIsoClustersRefRemoval") :
+        print "[customiseTrackClusterRemoval] customise hltIter2HighPtTkMuIsoClustersRefRemoval"
+
+        removalPhase2 = cms.EDProducer("TrackClusterRemoverPhase2")
+        removalPhase2.phase2OTClusters = cms.InputTag("hltSiPhase2Clusters")
+        removalPhase2.phase2pixelClusters = cms.InputTag("hltSiPixelClusters")
+
+        for paramName, param in process.hltIter2HighPtTkMuIsoClustersRefRemoval.parameters_().iteritems() :
+
+            if not paramName.find("Clusters") >=0 :
+                setattr(removalPhase2,paramName,param)
+
+        process.hltIter2HighPtTkMuIsoClustersRefRemoval = removalPhase2
+
+    if hasattr(process,"hltIter2HighPtTkMuClustersRefRemoval") :
+        print "[customiseTrackClusterRemoval] customise hltIter2HighPtTkMuClustersRefRemoval"
+
+        removalPhase2 = cms.EDProducer("TrackClusterRemoverPhase2")
+        removalPhase2.phase2OTClusters = cms.InputTag("hltSiPhase2Clusters")
+        removalPhase2.phase2pixelClusters = cms.InputTag("hltSiPixelClusters")
+
+        for paramName, param in process.hltIter2HighPtTkMuClustersRefRemoval.parameters_().iteritems() :
+
+            if not paramName.find("Clusters") >= 0 :
+                setattr(removalPhase2,paramName,param)
+
+        process.hltIter2HighPtTkMuClustersRefRemoval = removalPhase2
+
+    if hasattr(process,"hltIter1HighPtTkMuIsoClustersRefRemoval") :
+        print "[customisTrackClusterRemoval] customise hltIter1HighPtTkMuIsoClustersRefRemoval"
+
+        removalPhase2 = cms.EDProducer("TrackClusterRemoverPhase2")
+        removalPhase2.phase2OTClusters = cms.InputTag("hltSiPhase2Clusters")
+        removalPhase2.phase2pixelClusters = cms.InputTag("hltSiPixelClusters")
+
+        for paramName, param in process.hltIter1HighPtTkMuIsoClustersRefRemoval.parameters_().iteritems() :
+
+            if not paramName.find("Clusters") >= 0 :
+                setattr(removalPhase2,paramName,param)
+
+        process.hltIter1HighPtTkMuIsoClustersRefRemoval = removalPhase2
+
+    return process
+
+def customiseTrackerEventProducer(process):
+
+    if hasattr(process,"hltIter2HighPtTkMuMaskedMeasurementTrackerEvent") :
+        print "[customiseTrackerEventProducer] customise hltIter2HighPtTkMuMaskedMeasurementTrackerEvent"
+
+        producerPhase2 = cms.EDProducer("MaskedMeasurementTrackerEventProducer")
+        producerPhase2.phase2clustersToSkip = cms.InputTag("hltSiStripClusters")
+
+        for paramName, param in process.hltIter2HighPtTkMuMaskedMeasurementTrackerEvent.parameters_().iteritems() :
+
+            if not paramName.find("ToSkip") >= 0 :
+                setattr(producerPhase2,paramName,param)
+            else :
+                setattr(producerPhase2,"phase2clustersToSkip",param)
+
+        process.hltIter2HighPtTkMuMaskedMeasurementTrackerEvent = producerPhase2
+
+    if hasattr(process,"hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent") :
+        print "[customiseTrackerEventProducer] customise hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent"
+
+        producerPhase2 = cms.EDProducer("MaskedMeasurementTrackerEventProducer")
+        producerPhase2.phase2clustersToSkip = cms.InputTag("hltSiStripClusters")
+
+        for paramName, param in process.hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent.parameters_().iteritems() :
+
+            if not paramName.find("ToSkip") >= 0 :
+                setattr(producerPhase2,paramName,param)
+            else :
+                setattr(producerPhase2,"phase2clustersToSkip",param)
+                
+
+        process.hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent = producerPhase2
+
+    if hasattr(process,"hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent") :
+        print "[customiseTrackerEventProducer] customise hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent"
+
+        producerPhase2 = cms.EDProducer("MaskedMeasurementTrackerEventProducer")
+        producerPhase2.phase2clustersToSkip = cms.InputTag("hltSiStripClusters")
+       
+        for paramName, param in process.hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent.parameters_().iteritems() :
+
+            if not paramName.find("ToSkip") >= 0 :
+                setattr(producerPhase2,paramName,param)
+            else :
+                setattr(producerPhase2,"phase2clustersToSkip",param)
+
+        process.hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent = producerPhase2
+
+    return process
+
