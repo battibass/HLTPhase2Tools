@@ -83,7 +83,7 @@ def printSequence(process,seq,printObj=False) :
     print "[" + seq.label_() + "]"
     sys.stdout.write(BLUE)
     
-    for moduleName in seq.moduleNames() :
+    for moduleName in str(seq).replace("+","*").split("*") :
 
         if process.producerNames().find(moduleName) >= 0 :
 
