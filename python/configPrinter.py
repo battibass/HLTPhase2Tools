@@ -33,11 +33,25 @@ def printParams(label,params,nTab = 0) :
     print ("  "*nTab) + "   [" + label + "]"
     sys.stdout.write(BLUE)
 
+def getParams(params, parType = "string") :
+
+    getParameters = []
+
+    for parName, par in sorted(params.iteritems()) :
+        if par.configTypeName() == "VPSet" :
+            for parInVPset in par :
+                getParameters = getParams(parInVPset.parameters_(),parType)
+        elif par.configTypeName() == "PSet" :
+                getParameters = getParams(par.parameters_(),parType)
+        elif par.configTypeName() == parType : 
+            getParameters.append(par)
+
+    return getParameters
 
 def printObject(obj) :
 
     print
-    printParams(obj.label_(),obj.parameters_())
+    printParams(obj.label_() + " == " + obj.type_(),obj.parameters_())
     print
 
 def guessInputTags(params) :
@@ -55,23 +69,30 @@ def guessInputTags(params) :
 
     return inputTags
 
-def guessEventSetup(params) :
+def guessEventSetup(process,params) :
 
     eventSetup = []
 
     for parName, par in sorted(params.iteritems()) :
         if par.configTypeName() == "VPSet" :
             for parInVPset in par :
-                eventSetup.extend(guessEventSetup(parInVPset.parameters_()))
+                eventSetup.extend(guessEventSetup(process,parInVPset.parameters_()))
         elif par.configTypeName() == "PSet" :
-                eventSetup.extend(guessEventSetup(par.parameters_()))
+                eventSetup.extend(guessEventSetup(process,par.parameters_()))
         elif par.configTypeName() == "string" and \
              par.value().find("ES") >= 0 :
             eventSetup.append(par.value())
+        elif par.configTypeName() == "string" and len(par.value()) > 0 :
+            for esProducer in process.es_producers_() :
+                for esPar in getParams(process.es_producers_()[esProducer].parameters_()) :
+                    if esPar == par.value() :
+                        eventSetup.append(process.es_producers_()[esProducer].label_())
+            for esSource in process.es_sources_() :
+                for esPar in getParams(process.es_sources_()[esSource].parameters_()) :
+                    if esPar == par.value() :
+                        eventSetup.append(process.es_sources_()[esSource].label_())
 
     return eventSetup
-
-    
             
 
 def printSequence(process,seq,printObj=False) :
@@ -88,16 +109,15 @@ def printSequence(process,seq,printObj=False) :
         if process.producerNames().find(moduleName) >= 0 :
 
             inputTags.extend(guessInputTags(process.producers_()[moduleName].parameters_()))
-            eventSetups.extend(guessEventSetup(process.producers_()[moduleName].parameters_()))
+            eventSetups.extend(guessEventSetup(process,process.producers_()[moduleName].parameters_()))
             print "  [EDProducer] :", moduleName, GREEN, \
                   "\ttype :", process.producers_()[moduleName].type_(), BLUE            
             continue
 
 
-        if process.filterNames().find(moduleName) >= 0 :
 
             inputTags.extend(guessInputTags(process.filters_()[moduleName].parameters_()))
-            eventSetups.extend(guessEventSetup(process.filters_()[moduleName].parameters_()))
+            eventSetups.extend(guessEventSetup(process,process.filters_()[moduleName].parameters_()))
             print "  [EDFilter] :", moduleName, GREEN, \
                   "\ttype :", process.filters_()[moduleName].type_(), BLUE
             continue
@@ -121,18 +141,52 @@ def printSequence(process,seq,printObj=False) :
         print "\n[Printing sequence objects]"
         sys.stdout.write(BLUE)
 
-        for moduleName in seq.moduleNames() :
+        for moduleName in str(seq).replace("+","*").split("*") :
             printObject(getattr(process,moduleName))
 
     sys.stdout.write(RED)
     print "\n[Printing guessed InputTags]"
     sys.stdout.write(GREEN)
-    print inputTags
+    print set(inputTags)
 
     sys.stdout.write(RED)
     print "\n[Printing guessed ES dependencies]"
     sys.stdout.write(YELLOW)
-    print eventSetups
+    print set(eventSetups)
+
+def findByType(process,typeName) :
+    
+    sys.stdout.write(RED)
+    print "\n[Checking EDProducers]"
+    sys.stdout.write(GREEN)
+
+    for name, prod in process.producers_().iteritems() :
+        if prod.type_() == typeName :
+            print "  ", prod.label_()
+
+    sys.stdout.write(RED)
+    print "\n[Checking EDFilters]"
+    sys.stdout.write(GREEN)
+
+    for name, prod in process.filters_().iteritems() :
+        if prod.type_() == typeName :
+            print "  ", prod.label_()
+
+    sys.stdout.write(RED)
+    print "\n[Checking ESProducers]"
+    sys.stdout.write(GREEN)
+
+    for name, prod in process.es_producers_().iteritems() :
+        if prod.type_() == typeName :
+            print "  ", prod.label_()
+
+    sys.stdout.write(RED)
+    print "\n[Checking ESSources]"
+    sys.stdout.write(GREEN)
+
+    for name, prod in process.es_sources_().iteritems() :
+        if prod.type_() == typeName :
+            print "  ", prod.label_()
 
 
 def compareParams(obj1,obj2,nTab = 0) :

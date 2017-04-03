@@ -22,8 +22,10 @@ git cms-addpkg HLTrigger/Configuration
 
 git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
-# From hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale > Configuration/python/HLT_User_cff.py
-cp HLTrigger/Phase2/test/HLT_User_cff.py HLTrigger/Configuration/python/
+# From hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale > Configuration/python/HLT_UserIsoMu24_cff.py
+# From hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLTriggerFinalPath --unprescale > Configuration/python/HLT_UserIsoTkMu24_cff.py
+cp HLTrigger/Phase2/test/HLT_UserIsoMu24_cff.py HLTrigger/Configuration/python/
+cp HLTrigger/Phase2/test/HLT_UserIsoTkMu24_cff.py HLTrigger/Configuration/python/
 
 scramv1 b -j 5
 

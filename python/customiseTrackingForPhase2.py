@@ -6,6 +6,7 @@ def customiseTracking(process):
     process = customiseStripLocalReco(process)
     process = customiseTrackClusterRemoval(process)
     process = customiseTrackerEventProducer(process)
+    process = customiseTkMuTrackerReco(process)
     return process
 
 
@@ -16,15 +17,9 @@ def customisePixelLocalReco(process):
 
         process.hltSiPixelClusters.src = cms.InputTag( "simSiPixelDigis","Pixel" )
         process.hltSiPixelClusters.payloadType = cms.string('Offline') # CB to be checked
-        process.hltSiPixelClusters.MissCalibrate = cms.untracked.bool(False) 
+        process.hltSiPixelClusters.MissCalibrate = cms.untracked.bool(False)
+        process.hltSiPixelClusters.ElectronPerADCGain = cms.double(600.0) #CB to be checked as well, was not in HLT
 
-    #if hasattr(process,"hltSiPixelClustersCache") :
-    #    print "[customisePixelLocalReco] switch to simSiPixelDigis as source"
-    #    process.hltSiPixelClustersCache.src = cms.InputTag( "simSiPixelDigis","Pixel" )
-
-    #process.siPixelFakeGainOfflineESSource = cms.ESSource("SiPixelFakeGainOfflineESSource",
-    #                                                  file = cms.FileInPath('SLHCUpgradeSimulations/Geometry/data/PhaseII/Tilted/EmptyPixelSkimmedGeometry.txt')
-    #                                                  )
     process.load("CondTools.SiPixel.SiPixelGainCalibrationService_cfi")
     
     if hasattr(process,"hltESPPixelCPEGeneric") :
@@ -66,8 +61,10 @@ def customiseStripLocalReco(process):
 
         process.hltSiStripClusters.Phase2TrackerCluster1DProducer = cms.string('hltSiPhase2Clusters')
         process.hltSiStripClusters.inactivePixelDetectorLabels = []
-        #process.hltSiStripClusters.inactiveStripDetectorLabels = []
+        process.hltSiStripClusters.inactiveStripDetectorLabels = [cms.InputTag("siStripDigis")]
         process.hltSiStripClusters.stripClusterProducer = ''
+        #process.hltSiStripClusters.measurementTracker = ''
+
 
     process.load("RecoLocalTracker.Phase2TrackerRecHits.Phase2StripCPEGeometricESProducer_cfi")
 
@@ -180,6 +177,17 @@ def customiseTrackerEventProducer(process):
                 setattr(producerPhase2,"phase2clustersToSkip",param)
 
         process.hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent = producerPhase2
+
+    return process
+
+
+def customiseTkMuTrackerReco(process):
+
+    if hasattr(process,"hltESPTTRHBWithTrackAngle") :
+        print "[customiseTkMuTrackerReco] customise customiseTkMuTrackerReco"
+
+        # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
+        process.hltESPTTRHBWithTrackAngle.Phase2StripCPE = cms.string('Phase2StripCPE')
 
     return process
 

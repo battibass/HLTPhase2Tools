@@ -3,11 +3,12 @@ import HLTrigger.Phase2.customiseTrackingForPhase2 as tracking
 
 def customiseMuons(process):
 
-    process = customiseL1Unpacking(process)
-    process = customiseL1Seeds(process)
+    # process = customiseL1Unpacking(process)
+    # process = customiseL1Seeds(process)
     process = addGemsToL2(process)
     process = tracking.customiseTracking(process)
     process = removeHLTIsoMu24Steps(process)
+    process = removeHLTIsoTkMu24Steps(process)
     process = addTrigReport(process)
 
     return process
@@ -25,13 +26,19 @@ def customiseL1Unpacking(process):
     return process
 
      
-def customiseL1Seeds(process):
+def customiseL1Seeds( process):
    
     if hasattr(process,"HLT_IsoMu24_v4") :
         print "[customiseL1Seeds] Add cms.Ignore() to IsoMu24 L1 related filters"
 
         process.HLT_IsoMu24_v4.replace(process.hltL1sSingleMu22,cms.ignore(process.hltL1sSingleMu22))
         process.HLT_IsoMu24_v4.replace(process.hltL1fL1sMu22L1Filtered0,cms.ignore(process.hltL1fL1sMu22L1Filtered0))
+
+    if hasattr(process,"HLT_IsoTkMu24_v4") :
+        print "[customiseL1Seeds] Add cms.Ignore() to IsoTkMu24 L1 related filters"
+
+        process.HLT_IsoTkMu24_v4.replace(process.hltL1sSingleMu22,cms.ignore(process.hltL1sSingleMu22))
+        process.HLT_IsoTkMu24_v4.replace(process.hltL1fL1sMu22L1Filtered0,cms.ignore(process.hltL1fL1sMu22L1Filtered0))
 
     return process
 
@@ -82,6 +89,34 @@ def removeHLTIsoMu24Steps(process):
 
     return process
 
+def removeHLTIsoTkMu24Steps(process):
+
+    if hasattr(process,"HLT_IsoTkMu24_v4") :
+        print "[removeHLTIsoTkMu24Steps] Removing steps not yet migrated to Phase2"
+    
+#        process.HLT_IsoTkMu24_v4.replace(process.HLTHighPt24TrackerMuonSequence, process.HLTDoLocalPixelSequence \
+#                                                                                 + process.HLTDoLocalStripSequence \
+#                                                                                 + process.hltL1MuonsPt15 \
+#                                                                                 + process.hltPixelLayerTriplets \
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracksFilter \
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracksFitter \
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracksTrackingRegions \
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracksHitDoublets \
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracksHitTriplets \
+#
+#                                                                                 + process.hltIter0HighPtTkMuPixelTracks \
+#                                                                                 + process.hltIter0HighPtTkMuPixelSeedsFromPixelTracks \
+#                                                                                 + process.hltIter0HighPtTkMuCkfTrackCandidates \
+#                                                                                 + process.hltIter0HighPtTkMuCtfWithMaterialTracks \
+#                                                                                 #+ process.hltIter0HighPtTkMuTrackSelectionHighPurity \
+#                                                                                 # process.HLTIterativeTrackingHighPtTkMuIteration0
+#                                                                                 )
+#        process.HLT_IsoTkMu24_v4.remove(process.hltL3fL1sMu22f0TkFiltered24Q)
+        process.HLT_IsoTkMu24_v4.remove(process.HLTTkMu24IsolationSequence)
+        process.HLT_IsoTkMu24_v4.remove(process.hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09) 
+
+    return process
+
 
 def addTrigReport(process):
     # enable TrigReport, TimeReport and MultiThreading
@@ -95,6 +130,8 @@ def addTrigReport(process):
         sizeOfStackForThreadsInKB = cms.untracked.uint32( 10*1024 )
         )
 
+    print "[addTrigReport] Customise event content to keep hlt* "
+
     return process
         
 def customiseMuonValidation(process):
@@ -103,31 +140,43 @@ def customiseMuonValidation(process):
         print "[customiseMuonValidation] Add HLT validation modules to offline muon validation"
     
         process.load("Validation.RecoMuon.muonValidationHLT_cff")
+        process.load("DQMOffline.Trigger.MuonOffline_Trigger_cff")
+
+        process.tpToL3TkMuonAssociation.tracksTag = cms.InputTag("hltIter2HighPtTkMuMerged")
+        process.l3TkMuonMuTrackV.label = cms.VInputTag("hltIter2HighPtTkMuMerged")
 
         process.muonValidationHLTPhase2_seq = cms.Sequence( process.tpToL2MuonAssociation 
                                                             + process.l2MuonMuTrackV
                                                             + process.tpToL2UpdMuonAssociation 
                                                             + process.l2UpdMuonMuTrackV
-                                                            #+tpToL3TkMuonAssociation + l3TkMuonMuTrackV
+                                                            + process.tpToL3TkMuonAssociation 
+                                                            + process.l3TkMuonMuTrackV
+                                                            + process.muonFullOfflineDQM
                                                             #+tpToL3MuonAssociation + l3MuonMuTrackV
                                                            )
 
         process.globalPrevalidationMuons.replace(process.glbMuonTrackVMuonAssoc, 
                                                  process.glbMuonTrackVMuonAssoc + process.muonValidationHLTPhase2_seq)
+  
+        #process.globalValidation.remove(process.hcaldigisValidationSequence)
+        
 
     if hasattr(process,"postValidation") and \
        hasattr(process,"recoMuonPostProcessors") :
 
         process.load("Validation.RecoMuon.PostProcessorHLT_cff")
+        process.load("DQMOffline.Trigger.MuonPostProcessor_cff")
 
         if hasattr(process,"postValidation") :
             print "[customiseMuonValidation] Add HLT validation modules to offline muon validation harvesting"
 
-            process.muonRecoHltPostProcessors_seq = cms.Sequence( process.recoMuonPostProcessors
-                                                                  + process.recoMuonPostProcessorsHLT )
+            process.muonRecoHltPostProcessors_seq = cms.Sequence( process.postProcessorRecoMuon_Sta
+                                                                  + process.recoMuonPostProcessorsHLT
+                                                                  + process.hltMuonPostVal 
+                                                                )
 
-            process.postValidation.replace( process.recoMuonPostProcessors,
-                                            process.muonRecoHltPostProcessors_seq )
+            process.postValidation_muons.replace( process.postProcessorRecoMuon_Sta,
+                                                  process.muonRecoHltPostProcessors_seq )
 
     return process
 
