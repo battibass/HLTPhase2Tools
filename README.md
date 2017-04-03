@@ -22,7 +22,10 @@ hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirst
 
 # Or IsoMu24: hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserIsoMu24_cff.py
 
+mkdir HLTrigger/Phase2/test
 cd HLTrigger/Phase2/test
+
+
 
 # From runTheMatrix.py  -ne -w upgrade -l 21208.0 (SingleMuPt100 no PU)
 cmsDriver.py SingleMuPt100_pythia8_cfi  --conditions auto:phase2_realistic -n 10 --era Phase2C2 --eventcontent FEVTDEBUG --relval 9000,100 -s GEN,SIM --datatier GEN-SIM --beamspot HLLHC --geometry Extended2023D4
