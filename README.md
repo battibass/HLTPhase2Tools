@@ -12,15 +12,15 @@ Get HLT_Iso(Tk)Mu24, prepare and run customized sequences :
 
 ```bash
 git cms-addpkg HLTrigger/Configuration
-
 git cms-merge-topic battibass:myTrackingFix
 
 git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
-# From hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > Configuration/python/HLT_UserIsoMu24_cff.py
-# From hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > Configuration/python/HLT_UserIsoTkMu24_cff.py
-
 scramv1 b -j 5
+
+hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserIsoTkMu24_cff.py
+
+# Or IsoMu24: hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserIsoMu24_cff.py
 
 cd HLTrigger/Phase2/test
 
