@@ -183,11 +183,27 @@ def customiseTrackerEventProducer(process):
 
 def customiseTkMuTrackerReco(process):
 
-    if hasattr(process,"hltESPTTRHBWithTrackAngle") :
-        print "[customiseTkMuTrackerReco] customise customiseTkMuTrackerReco"
+    for obj in ["ClusterShapeHitFilterESProducer"] :
+        if hasattr(process,obj) :
+            print "[customiseTkMuTrackerReco] customise", obj
 
-        # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
-        process.hltESPTTRHBWithTrackAngle.Phase2StripCPE = cms.string('Phase2StripCPE')
+            getattr(process,obj).PixelShapeFile = cms.string('RecoPixelVertexing/PixelLowPtUtilities/data/pixelShape_Phase2Tk.par')
+
+    for obj in ["hltESPTTRHBWithTrackAngle"] :
+
+        if hasattr(process,obj) :
+            print "[customiseTkMuTrackerReco] customise", obj
+
+            # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
+            getattr(process,obj).Phase2StripCPE = cms.string('Phase2StripCPE')
+
+    # for obj in ["hltESPTTRHBuilderPixelOnly"] :
+   
+    #     if hasattr(process,obj) :
+    #         print "[customiseTkMuTrackerReco] customise", obj
+
+    #         # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
+    #         getattr(process,obj).Phase2StripCPE = cms.string('Fake')
 
     return process
 
