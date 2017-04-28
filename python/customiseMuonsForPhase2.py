@@ -54,6 +54,19 @@ def removeHLTIsoMu24Steps(process):
 
     return process
 
+def removeHLTMu50Steps(process):
+
+    if hasattr(process,"HLT_Mu50_v5") :
+        print "[removeHLTMu50Steps] Removing steps not yet migrated to Phase2"
+    
+        process.HLT_Mu50_v5.replace(process.HLTL2muonrecoSequence, process.HLTL2muonrecoSequence \
+                                                                      + process.HLTDoLocalPixelSequence \
+                                                                      + process.HLTDoLocalStripSequence)
+        #process.HLT_Mu50_v5.remove(process.HLTL3muonrecoSequence)
+        process.HLT_Mu50_v5.remove(process.hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q)
+
+    return process
+
 def removeHLTIsoTkMu24Steps(process):
 
     if hasattr(process,"HLT_IsoTkMu24_v4") :

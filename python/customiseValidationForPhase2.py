@@ -33,6 +33,12 @@ def getMuonValidationSequence(process):
     process.TkMuIter2MuonMuTrackV.associatormap = 'tpToTkMuIter2MuonAssociation'
     process.TkMuIter2MuonMuTrackV.label = cms.VInputTag("hltIter2HighPtTkMuTrackSelectionHighPurity")
 
+    process.tpToL3MuonTracksMergedMuonAssociation = process.tpToL3TkMuonAssociation.clone()
+    process.tpToL3MuonTracksMergedMuonAssociation.tracksTag = cms.InputTag("hltIterL3MuonMerged")
+
+    process.l3MuonTracksMergedMuonV = process.l3TkMuonMuTrackV.clone()
+    process.l3MuonTracksMergedMuonV.associatormap = 'tpToL3MuonTracksMergedMuonAssociation'
+    process.l3MuonTracksMergedMuonV.label = cms.VInputTag("hltIterL3MuonMerged")
 
     muonValidationHLTPhase2_seq = cms.Sequence( process.tpToL2MuonAssociation 
                                                 + process.l2MuonMuTrackV
@@ -46,6 +52,12 @@ def getMuonValidationSequence(process):
                                                 + process.TkMuIter0MuonMuTrackV
                                                 + process.tpToTkMuIter2MuonAssociation 
                                                 + process.TkMuIter2MuonMuTrackV
+                                                + process.tpToTkMuIter2MuonAssociation 
+                                                + process.TkMuIter2MuonMuTrackV
+                                                + process.tpToTkMuIter2MuonAssociation 
+                                                + process.TkMuIter2MuonMuTrackV
+                                                + process.tpToL3MuonTracksMergedMuonAssociation
+                                                + process.l3MuonTracksMergedMuonV
                                                 + process.hltMuonValidator
                                                 + process.muonFullOfflineDQM
                                                 #+tpToL3MuonAssociation + l3MuonMuTrackV

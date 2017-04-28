@@ -13,6 +13,7 @@ def customiseMuons(process):
     process = tracking.customiseTracking(process)
     process = muons.removeHLTIsoMu24Steps(process)
     process = muons.removeHLTIsoTkMu24Steps(process)
+    process = muons.removeHLTMu50Steps(process)
     process = addTrigReport(process)
 
     return process

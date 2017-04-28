@@ -8,11 +8,12 @@ cd CMSSW_9_0_0/src
 cmsenv
 ```
 
-Get HLT_Iso(Tk)Mu24, prepare and run customized sequences :
+Get HLT_(Iso/Tk)Mu24(50), prepare and run customized sequences :
 
 ```bash
 git cms-addpkg HLTrigger/Configuration
 git cms-merge-topic battibass:myTrackingFix
+git cms-merge-topic 18286 # (From Santiago, needed by the new muon L3)
 
 git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
@@ -21,6 +22,8 @@ scramv1 b -j 5
 hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserIsoTkMu24_cff.py
 
 # Or IsoMu24: hltGetConfiguration --cff --offline /dev/CMSSW_9_0_0/GRun --paths HLTriggerFirstPath,HLT_IsoMu24_v4,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserIsoMu24_cff.py
+
+# Or Mu50 using the new L3: hltGetConfiguration --cff --offline /users/folguera/MuonHLT2017/IterL3MuonFromL2/V3 --paths HLTriggerFirstPath,HLT_Mu50_v5,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_UserMu50_cff.py
 
 mkdir HLTrigger/Phase2/test
 cd HLTrigger/Phase2/test
