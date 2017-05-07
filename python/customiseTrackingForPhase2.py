@@ -89,7 +89,9 @@ def customiseTrackClusterRemoval(process):
     objects = ["hltIter2IterL3MuonClustersRefRemoval",    \
                "hltIter2HighPtTkMuIsoClustersRefRemoval", \
                "hltIter2HighPtTkMuClustersRefRemoval",    \
-               "hltIter1HighPtTkMuIsoClustersRefRemoval" ] 
+               "hltIter1HighPtTkMuIsoClustersRefRemoval", \
+               "hltIter1ClustersRefRemoval", \
+               "hltIter2ClustersRefRemoval" ] 
 
     for obj in objects : 
         if hasattr(process,obj) :
@@ -113,7 +115,9 @@ def customiseTrackerEventProducer(process):
     objects = [ "hltIter2IterL3MuonMaskedMeasurementTrackerEvent",    \
                 "hltIter2HighPtTkMuMaskedMeasurementTrackerEvent",    \
                 "hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent", \
-                "hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent" ]
+                "hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent", \
+                "hltIter1MaskedMeasurementTrackerEvent", \
+                "hltIter2MaskedMeasurementTrackerEvent", ]
  
     for obj in objects : 
         if hasattr(process,obj) :
