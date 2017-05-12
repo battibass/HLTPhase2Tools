@@ -21,6 +21,7 @@ def customiseMuons(process):
 def customiseRelVal(process):
 
     process = val.customiseMuonRelVal(process)
+    process = val.customiseJetMETRelVal(process)
 
     return process
 

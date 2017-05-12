@@ -195,3 +195,33 @@ def customiseMuonRelValStep2Harvesting(process):
         process.schedule = cms.Schedule(process.muonHLTPostProcessors,process.pDQMSaver)
 
     return process
+
+def customiseJetMETRelVal(process):
+
+    if hasattr(process,"validationMiniAOD") :
+        print "[customiseJetMETValidation] Add HLT validation modules to offline JetMET validation"
+    
+        process.SingleJetMetPaths = cms.EDAnalyzer("HLTJetMETValidation",
+            triggerEventObject    = cms.untracked.InputTag("hltTriggerSummaryRAW","","HLT"),
+            DQMFolder             = cms.untracked.string("HLT/HLTJETMET/"),
+            PatternJetTrg         = cms.untracked.string("HLT_PF(NoPU)?Jet([0-9])+(_v[0-9]+)?$"),                                   
+            PatternMetTrg         = cms.untracked.string("HLT_PF(ch)?MET([0-9])+(_HBHECleaned+)+(_v[0-9]+)?$"),
+            PatternMuTrg          = cms.untracked.string("HLT_Mu([0-9])+(_v[0-9]+)?$"),
+            LogFileName           = cms.untracked.string('JetMETSingleJetValidation.log'),
+            PFJetAlgorithm        = cms.untracked.InputTag("hltAK4PFJets"),
+            GenJetAlgorithm       = cms.untracked.InputTag("ak4GenJets"),
+            CaloMETCollection     = cms.untracked.InputTag("hltMet"),
+            GenMETCollection      = cms.untracked.InputTag("genMetCalo"),
+            HLTriggerResults      = cms.InputTag("TriggerResults::HLT"),
+        )
+
+        process.HLTJetMETValSeq = cms.Sequence(process.SingleJetMetPaths)
+        process.validation_step6.replace(process.validationMiniAOD,process.validationMiniAOD+process.HLTJetMETValSeq)
+
+    if hasattr(process,"DQMHarvestMiniAOD_step") :
+
+        process.myJetValidation_seq = cms.Sequence(process.JetMETPostVal)
+        
+        process.DQMHarvestMiniAOD_step.replace(process.DQMHarvestMiniAOD,process.DQMHarvestMiniAOD+process.myJetValidation_seq)
+
+    return process
