@@ -10,7 +10,7 @@ BOLD   = "\033[;1m"
 
 import sys
 
-def printParams(label,params,nTab = 0) :
+def printParams(process,label,params,nTab = 0) :
     
     if nTab == 0 :
         sys.stdout.write(GREEN)
@@ -21,9 +21,12 @@ def printParams(label,params,nTab = 0) :
     for parName, par in sorted(params.iteritems()) :
         if par.configTypeName() == "VPSet" :
             for parInVPset in par :
-                printParams(parName,parInVPset.parameters_(),nTab+1)
+                printParams(process,parName,parInVPset.parameters_(),nTab+1)
         elif par.configTypeName() == "PSet" :
-                printParams(parName,par.parameters_(),nTab+1)
+            printParams(process,parName,par.parameters_(),nTab+1)
+        elif parName == "refToPSet_" :
+            pSet = getattr(process,par.value())
+            printParams(process,pSet.label(),pSet.parameters_(),nTab+1)        
         else :
             print ("  "*(nTab+1))," ",parName, "=", par
     if nTab == 0 :
@@ -33,25 +36,46 @@ def printParams(label,params,nTab = 0) :
     print ("  "*nTab) + "   [" + label + "]"
     sys.stdout.write(BLUE)
 
-def getParams(params, parType = "string") :
+def getParams(process, params, parType = "string") :
 
     getParameters = []
 
     for parName, par in sorted(params.iteritems()) :
         if par.configTypeName() == "VPSet" :
             for parInVPset in par :
-                getParameters = getParams(parInVPset.parameters_(),parType)
+                getParameters += getParams(process,parInVPset.parameters_(),parType)
         elif par.configTypeName() == "PSet" :
-                getParameters = getParams(par.parameters_(),parType)
+                getParameters += getParams(process,par.parameters_(),parType)
+        elif parName == "refToPSet_" :
+            pSet = getattr(process,par.value())
+            getParameters += getParams(process,pSet.parameters_(),parType)
         elif par.configTypeName() == parType : 
             getParameters.append(par)
 
     return getParameters
 
-def printObject(obj) :
+def getParamNames(process, params, parType = "string") :
+
+    getParameterNames = []
+
+    for parName, par in sorted(params.iteritems()) :
+        if par.configTypeName() == "VPSet" :
+            for parInVPset in par :
+                getParameterNames += getParamNames(process,parInVPset.parameters_(),parType)
+        elif par.configTypeName() == "PSet" :
+                getParameterNames += getParamNames(process,par.parameters_(),parType)
+        elif parName == "refToPSet_" :
+            pSet = getattr(process,par.value())
+            getParameterNames += getParamNames(process,pSet.parameters_(),parType)
+        elif par.configTypeName() == parType :
+            getParameterNames.append(parName)
+
+    return getParameterNames
+
+def printObject(process,obj) :
 
     print
-    printParams(obj.label_() + " == " + obj.type_(),obj.parameters_())
+    printParams(process,obj.label_() + " == " + obj.type_(),obj.parameters_())
     print
 
 def guessInputTags(params) :
@@ -84,11 +108,11 @@ def guessEventSetup(process,params) :
             eventSetup.append(par.value())
         elif par.configTypeName() == "string" and len(par.value()) > 0 :
             for esProducer in process.es_producers_() :
-                for esPar in getParams(process.es_producers_()[esProducer].parameters_()) :
+                for esPar in getParams(process,process.es_producers_()[esProducer].parameters_()) :
                     if esPar == par.value() :
                         eventSetup.append(process.es_producers_()[esProducer].label_())
             for esSource in process.es_sources_() :
-                for esPar in getParams(process.es_sources_()[esSource].parameters_()) :
+                for esPar in getParams(process,process.es_sources_()[esSource].parameters_()) :
                     if esPar == par.value() :
                         eventSetup.append(process.es_sources_()[esSource].label_())
 
@@ -142,7 +166,7 @@ def printSequence(process,seq,printObj=False) :
         sys.stdout.write(BLUE)
 
         for moduleName in str(seq).replace("+","*").split("*") :
-            printObject(getattr(process,moduleName))
+            printObject(process,getattr(process,moduleName))
 
     sys.stdout.write(RED)
     print "\n[Printing guessed InputTags]"
@@ -189,6 +213,82 @@ def findByType(process,typeName) :
             print "  ", prod.label_()
 
 
+def findByParamValueObjs(process, objects, paramValue, parType = "string") :
+    
+    for name, prod in objects.iteritems() :
+        params = getParams(process, prod.parameters_(), parType)
+        
+        for param in params :
+            if param.value() == paramValue :    
+                print "  ", prod.label_()
+
+
+def findByParamValue(process, paramValue, parType = "string") :
+               
+    sys.stdout.write(RED)
+    print "\n[Checking EDProducers]"
+    sys.stdout.write(GREEN)
+
+    findByParamValueObjs(process, process.producers_(), paramValue, parType)
+    
+    sys.stdout.write(RED)
+    print "\n[Checking EDFilters]"
+    sys.stdout.write(GREEN)
+
+    findByParamValueObjs(process, process.filters_(), paramValue, parType)
+    
+    sys.stdout.write(RED)
+    print "\n[Checking ESProducers]"
+    sys.stdout.write(GREEN)
+
+    findByParamValueObjs(process, process.es_producers_(), paramValue, parType)
+
+    sys.stdout.write(RED)
+    print "\n[Checking ESSources]"
+    sys.stdout.write(GREEN)
+
+    findByParamValueObjs(process, process.es_sources_(), paramValue, parType)
+
+    
+def findByParamNameObjs(process, objects, parName, parType = "string") :
+    
+    sys.stdout.write(GREEN)
+
+    for name, prod in objects.iteritems() :
+        paramNames = getParamNames(process, prod.parameters_(), parType)
+        
+        for paramName in paramNames :
+            if paramName == parName :    
+                print prod.label_()
+
+def findByParamName(process,parName, parType = "string") :
+               
+    sys.stdout.write(RED)
+    print "\n[Checking EDProducers]"
+    sys.stdout.write(GREEN)
+
+    findByParamNameObjs(process, process.producers_(), parName, parType)
+
+    sys.stdout.write(RED)
+    print "\n[Checking EDFilters]"
+    sys.stdout.write(GREEN)
+
+    findByParamNameObjs(process, process.filters_(), parName, parType)
+
+    sys.stdout.write(RED)
+    print "\n[Checking ESProducers]"
+    sys.stdout.write(GREEN)
+    
+    findByParamNameObjs(process, process.es_producers_(), parName, parType)
+
+    sys.stdout.write(RED)
+    print "\n[Checking ESSources]"
+    sys.stdout.write(GREEN)
+    
+    findByParamNameObjs(process, process.es_sources_(), parName, parType)
+
+    
+    
 def compareParams(obj1,obj2,nTab = 0) :
 
     comparison = []
@@ -245,9 +345,7 @@ def compareParams(obj1,obj2,nTab = 0) :
             
             if par2.configTypeName() == "VPSet" :
                 comparison.append((RED + ("  "*nTab) + "   [" + parName + "] NO VPSET SUPPORT")) 
-                
-                
-#if par1.configTypeName() == "VPSet" :
+            #if par1.configTypeName() == "VPSet" :
             #    for parInVPset in par :
             #        compareParams(parName,parInVPset.parameters_(),nTab+1)
             #el
