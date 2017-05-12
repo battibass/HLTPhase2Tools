@@ -142,13 +142,18 @@ def customiseTrackerEventProducer(process):
 
 def customiseTkMuTrackerReco(process):
 
-    for obj in ["ClusterShapeHitFilterESProducer"] :
+    for obj in ["ClusterShapeHitFilterESProducer", \
+                "hltESPMixedStepClusterShapeHitFilter", \
+                "hltESPPixelLessStepClusterShapeHitFilter", \
+                "hltESPTobTecStepClusterShapeHitFilter", \
+                ] :
         if hasattr(process,obj) :
             print "[customiseTkMuTrackerReco] customise", obj
 
             getattr(process,obj).PixelShapeFile = cms.string('RecoPixelVertexing/PixelLowPtUtilities/data/pixelShape_Phase2Tk.par')
 
-    for obj in ["hltESPTTRHBWithTrackAngle"] :
+    for obj in ["hltESPTTRHBWithTrackAngle", \
+                "hltESPTTRHBuilderAngleAndTemplate"] :
 
         if hasattr(process,obj) :
             print "[customiseTkMuTrackerReco] customise", obj
