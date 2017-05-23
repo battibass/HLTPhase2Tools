@@ -21,6 +21,7 @@ def customisePixelLocalReco(process):
         process.hltSiPixelClusters.payloadType = cms.string('Offline') # CB to be checked
         process.hltSiPixelClusters.MissCalibrate = cms.untracked.bool(False)
         process.hltSiPixelClusters.ElectronPerADCGain = cms.double(600.0) #CB to be checked as well, was not in HLT
+        process.hltSiPixelClusters.maxNumberOfClusters = cms.int32(-1)
 
     process.load("CondTools.SiPixel.SiPixelGainCalibrationService_cfi")
     
@@ -92,6 +93,8 @@ def customiseTrackClusterRemoval(process):
                "hltIter2HighPtTkMuIsoClustersRefRemoval", \
                "hltIter2HighPtTkMuClustersRefRemoval",    \
                "hltIter1HighPtTkMuIsoClustersRefRemoval", \
+               "hltIter1L3MuonClustersRefRemoval", \
+               "hltIter2L3MuonClustersRefRemoval", \
                "hltIter1ClustersRefRemoval", \
                "hltIter2ClustersRefRemoval" ] 
 
@@ -116,8 +119,10 @@ def customiseTrackerEventProducer(process):
 
     objects = [ "hltIter2IterL3MuonMaskedMeasurementTrackerEvent",    \
                 "hltIter2HighPtTkMuMaskedMeasurementTrackerEvent",    \
-                "hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent", \
                 "hltIter1HighPtTkMuIsoMaskedMeasurementTrackerEvent", \
+                "hltIter2HighPtTkMuIsoMaskedMeasurementTrackerEvent", \
+                "hltIter1L3MuonMaskedMeasurementTrackerEvent", \
+                "hltIter2L3MuonMaskedMeasurementTrackerEvent", \
                 "hltIter1MaskedMeasurementTrackerEvent", \
                 "hltIter2MaskedMeasurementTrackerEvent", ]
  
