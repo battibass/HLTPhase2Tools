@@ -57,7 +57,8 @@ def customiseEventContent(process):
     if hasattr(process,"FEVTDEBUGHLToutput") :
         print "[customiseEventContent] Customise event content to keep hltIter* "
         process.FEVTDEBUGHLToutput.outputCommands.append('keep *_hltIter*_*_HLT')
-
+        process.FEVTDEBUGHLToutput.outputCommands.append('keep Phase2TrackerCluster1D*_*_*_HLT')
+        
     return process
 
 
