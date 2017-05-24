@@ -21,18 +21,19 @@ def customiseMuons(process):
 def customiseRelVal(process):
 
     process = val.customiseMuonRelVal(process)
+    process = val.customiseJetMETRelVal(process)
 
     return process
 
 def customiseRelValStep2(process):
 
-    process = val.customiseMuonRelValStep2(process)
+    process = val.customiseRelValStep2(process)
 
     return process
 
 def customiseRelValStep2Harvesting(process):
 
-    process = val.customiseMuonRelValStep2Harvesting(process)
+    process = val.customiseRelValStep2Harvesting(process)
 
     return process
 
@@ -56,7 +57,8 @@ def customiseEventContent(process):
     if hasattr(process,"FEVTDEBUGHLToutput") :
         print "[customiseEventContent] Customise event content to keep hltIter* "
         process.FEVTDEBUGHLToutput.outputCommands.append('keep *_hltIter*_*_HLT')
-
+        process.FEVTDEBUGHLToutput.outputCommands.append('keep Phase2TrackerCluster1D*_*_*_HLT')
+        
     return process
 
 
