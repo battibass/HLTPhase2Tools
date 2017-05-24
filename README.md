@@ -15,7 +15,7 @@ git cms-addpkg HLTrigger/Configuration
 git cms-merge-topic battibass:myTrackingFix
 git cms-merge-topic 18286 # (From Santiago, needed by the new muon L3)
 
-git cms-merge-topic battibass:validationFixes_90X # (Has brings some dependencies, should not be needed to run HLT, e.g. up to step 2 below)
+git cms-merge-topic battibass:validationFixes_90X # (Brings some dependencies, should not be needed to run HLT, e.g. up to step 2 below)
 
 git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
