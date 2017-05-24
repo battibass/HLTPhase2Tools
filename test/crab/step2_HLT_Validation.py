@@ -54,9 +54,9 @@ process.configurationMetadata = cms.untracked.PSet(
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '90X_upgrade2023_realistic_v9', '')
 
-from HLTrigger.Phase2.customiseForPhase2 import customiseMuons,customiseRelValStep2 
+from HLTrigger.Phase2.customiseForPhase2 import customiseTrigger,customiseRelValStep2 
 
-process = customiseMuons(process)
+process = customiseTrigger(process)
 process = customiseRelValStep2(process)
 
 # Schedule definition

@@ -4,7 +4,7 @@ import HLTrigger.Phase2.customiseMuonsForPhase2      as muons
 import HLTrigger.Phase2.customiseTrackingForPhase2   as tracking
 import HLTrigger.Phase2.customiseValidationForPhase2 as val
 
-def customiseMuons(process):
+def customiseTrigger(process):
 
     # process = customiseL1Seeds(process)
     process = muons.useRpcSimDigis(process)
