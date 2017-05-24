@@ -182,6 +182,7 @@ def getJetMETValidationSequence(process):
                 DQMFolder             = cms.untracked.string("HLT/HLTJETMET/"),
                 PatternJetTrg         = cms.untracked.string("HLT_PF(NoPU)?Jet([0-9])+(_v[0-9]+)?$"),                                   
                 PatternMetTrg         = cms.untracked.string("HLT_PF(ch)?MET([0-9])+(_HBHECleaned+)+(_v[0-9]+)?$"),
+                triggerProcessName    = cms.untracked.string("HLT"), 
                 PatternMuTrg          = cms.untracked.string("HLT_Mu([0-9])+(_v[0-9]+)?$"),
                 LogFileName           = cms.untracked.string('JetMETSingleJetValidation.log'),
                 PFJetAlgorithm        = cms.untracked.InputTag("hltAK4PFJets"),
@@ -272,6 +273,9 @@ def customiseRelValStep2(process):
                                 
                 getattr(process,obj).beamSpot = 'hltOnlineBeamSpot'         
 
+        if hasattr(process,"singleJetMetPaths") :
+            print "[customiseValidationStep2] singleJetMetPaths.triggerProcessName = HLTPhase2Upgrade"
+            process.singleJetMetPaths.triggerProcessName = cms.untracked.string("HLTPhase2Upgrade")
 
                 
         process.hltValidationPhase2 = cms.EndPath(process.dqmEnvHLT 
