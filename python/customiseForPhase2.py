@@ -27,13 +27,13 @@ def customiseRelVal(process):
 
 def customiseRelValStep2(process):
 
-    process = val.customiseMuonRelValStep2(process)
+    process = val.customiseRelValStep2(process)
 
     return process
 
 def customiseRelValStep2Harvesting(process):
 
-    process = val.customiseMuonRelValStep2Harvesting(process)
+    process = val.customiseRelValStep2Harvesting(process)
 
     return process
 
