@@ -21,7 +21,19 @@ process.maxEvents = cms.untracked.PSet(
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
-    fileNames = cms.untracked.vstring('file:step2.root'),
+    fileNames = cms.untracked.vstring(
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/1E42323E-4024-E711-B4A6-0025905B859E.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/1EF8E786-4024-E711-B8A3-0025904C7F5E.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/422F46CA-D523-E711-BE82-A0000420FE80.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/8C786BBA-4024-E711-8562-549F3525CD78.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/96D498CD-E023-E711-B301-0CC47A7E6A2C.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/A2F37ACE-DC23-E711-9927-0242AC130004.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/B4B4B551-DD23-E711-A566-00259029E87C.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/CE984B0B-EA23-E711-BFB8-24BE05C60802.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/E02EA977-4024-E711-AB5E-F02FA768CFD2.root',
+        '/store/mc/PhaseIISpring17D/TT_TuneCUETP8M1_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/NoPU_pilot_90X_upgrade2023_realistic_v9-v1/50000/E2F16F19-4024-E711-887D-008CFAF2224C.root'
+        ),
+    #fileNames = cms.untracked.vstring('file:step2.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -29,27 +41,7 @@ process.options = cms.untracked.PSet(
 
 )
 
-# Production Info
-process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('step2_crab nevts:-1'),
-    name = cms.untracked.string('Applications'),
-    version = cms.untracked.string('$Revision: 1.19 $')
-)
-
-# Output definition
-#
-#process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
-#    dataset = cms.untracked.PSet(
-#        dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
-#        filterName = cms.untracked.string('')
-#    ),
-#    eventAutoFlushCompressedSize = cms.untracked.int32(10485760),
-#    fileName = cms.untracked.string('file:test.root'),
-#    outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
-#    splitLevel = cms.untracked.int32(0)
-#)
-
-# Additional output definition
+# Additional definitions
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '90X_upgrade2023_realistic_v9', '')
@@ -62,6 +54,7 @@ process = customiseRelValStep2(process)
 # Schedule definition
 process.schedule = process.HLTSchedule
 process.schedule.extend([process.hltValidationPhase2, process.DQMoutput])
+#process.schedule.extend([process.EDMoutput])
 
 # Automatic addition of the customisation function from HLTrigger.Configuration.customizeHLTforMC
 from HLTrigger.Configuration.customizeHLTforMC import customizeHLTforMC 
