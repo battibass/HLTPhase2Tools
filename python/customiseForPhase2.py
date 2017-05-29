@@ -52,6 +52,31 @@ def addTrigReport(process):
 
     return process
 
+def addEdmOutput(process,outputCommands,fileName):
+
+    print "[addEdmReport] Adding EDM output module with given outputCommands definition"
+
+    process.EDMoutput = cms.OutputModule("PoolOutputModule",
+                                         dataset = cms.untracked.PSet( dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
+                                                                       filterName = cms.untracked.string('')
+                                                                       ),
+                                         eventAutoFlushCompressedSize = cms.untracked.int32(10485760),
+                                         fileName = cms.untracked.string('file:'+fileName),
+                                         outputCommands = outputCommands,
+                                         splitLevel = cms.untracked.int32(0)
+                                         )
+    return process
+
+def addMemoryCheck(process):
+
+    print "[addMemoryCheck] Adding SimpleMemoryCheck service"
+
+    process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",
+                                            ignoreTotal = cms.untracked.int32(-1)
+                                            )
+
+    return process
+
 def customiseEventContent(process):
 
     if hasattr(process,"FEVTDEBUGHLToutput") :
