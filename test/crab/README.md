@@ -18,7 +18,7 @@ cmsRun step3_HARVESTING.py inputFolder=crab_SingleMu_Pt-8to100_NoPU_Phase2_HLT_V
 ```
 
 ## Run only HLT workflow :
-Edit `step2_HLT_Validation.py` :
+Edit `step2_HLT_Validation.py` so that :
 ```python
 ...
 from HLTrigger.Phase2.customiseForPhase2 import customiseTrigger,customiseRelValStep2
@@ -33,11 +33,11 @@ process.schedule.extend([process.hltValidationPhase2, process.DQMoutput])
 ...
 ```
 
-should become :
+becomes :
 
 ```python
 ...
-from HLTrigger.Phase2.customiseForPhase2 import customiseTrigger, addEdmOutput,
+from HLTrigger.Phase2.customiseForPhase2 import customiseTrigger, addEdmOutput
 
 process = customiseTrigger(process)
 process = addEdmOutput(process,process.FEVTDEBUGHLTEventContent.outputCommands,"HLT.root")
@@ -49,3 +49,4 @@ process.schedule.extend([process.EDMoutput])
 ...
 ```
 
+Then just run `cmsRun step2_HLT_Validation.py`
