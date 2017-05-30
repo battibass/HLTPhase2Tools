@@ -3,8 +3,8 @@
 ## Installation :
 Environment setup :
 ```bash
-cmsrel CMSSW_9_0_0
-cd CMSSW_9_0_0/src
+cmsrel CMSSW_9_0_3
+cd CMSSW_9_0_3/src
 cmsenv
 ```
 
@@ -12,16 +12,17 @@ Get HLT, prepare and run customized sequences :
 
 ```bash
 git cms-addpkg HLTrigger/Configuration
-git cms-merge-topic battibass:myTrackingFix
-git cms-merge-topic 18286 # (From Santiago, needed by the new muon L3)
+git cms-merge-topic battibass:myHLTRecoFixes
 
-git cms-merge-topic battibass:validationFixes_90X # (Brings quite some dependencies, can be skipped if one does not need Validation, e.g. up to step 2 below)
+# (Brings quite some dependencies, can be skipped if one does not need Validation, e.g. up to step 2 below)
+git cms-merge-topic battibass:validationFixes_90X 
 
 git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
 scramv1 b -j 5
 
-hltGetConfiguration --cff --offline /users/dsperka/phaseII/basic/v1.0/HLT/V8 --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLT_Mu50_v5,HLT_PFJet40_v9,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml > HLTrigger/Configuration/python/HLT_phaseIIbasic_cff.py
+hltGetConfiguration --cff --offline /users/battilan/phaseII/BasicPhase2HLT/V12 --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLT_IsoMu24_v4,HLT_Mu50_v5,HLT_PFJet40_v9,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml &> HLTrigger/Configuration/python/HLT_phaseIIbasic_cff.py
+
 
 cd HLTrigger/Phase2/test
 

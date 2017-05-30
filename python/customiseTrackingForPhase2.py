@@ -7,6 +7,8 @@ def customiseTracking(process):
     process = customiseTrackClusterRemoval(process)
     process = customiseTrackerEventProducer(process)
     process = customiseTkMuTrackerReco(process)
+    process = customiseL3MuReco(process)
+
     process = customisePFMerging(process)
 
     return process
@@ -175,6 +177,20 @@ def customiseTkMuTrackerReco(process):
     #         getattr(process,obj).Phase2StripCPE = cms.string('Fake')
 
     return process
+
+
+def customiseL3MuReco(process):
+
+    for obj in ["hltIterL3OIMuonTrackCutClassifier"] :
+
+        if hasattr(process,obj) :
+            print "[customiseTkMuTrackerReco] customise", obj
+
+            getattr(process,obj).ignoreVertices = cms.bool(True)
+
+    return process
+
+    
 
 def customisePFMerging(process):
 
