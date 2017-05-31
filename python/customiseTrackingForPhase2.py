@@ -9,8 +9,6 @@ def customiseTracking(process):
     process = customiseTkMuTrackerReco(process)
     process = customiseL3MuReco(process)
 
-    process = customisePFMerging(process)
-
     return process
 
 
@@ -184,24 +182,10 @@ def customiseL3MuReco(process):
     for obj in ["hltIterL3OIMuonTrackCutClassifier"] :
 
         if hasattr(process,obj) :
-            print "[customiseTkMuTrackerReco] customise", obj
+            print "[customiseL3MuReco] customise", obj
 
             getattr(process,obj).ignoreVertices = cms.bool(True)
 
     return process
 
     
-
-def customisePFMerging(process):
-
-    for obj in ["hltPFMuonMerging"] :
-        if hasattr(process,obj) :
-            print "[customisePFMerging] customise", obj
-
-            inputTags = cms.VInputTag("hltIterL3MuonMerged", "hltIter2Merged")
-
-            getattr(process,obj).TrackProducers = inputTags
-            getattr(process,obj).selectedTrackQuals = inputTags
-
-    return process
-
