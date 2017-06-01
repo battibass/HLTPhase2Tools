@@ -90,8 +90,8 @@ def customiseStripLocalReco(process):
 def customiseTrackClusterRemoval(process):
 
     objects = ["hltIter2IterL3MuonClustersRefRemoval",    \
-               "hltIter2HighPtTkMuIsoClustersRefRemoval", \
                "hltIter2HighPtTkMuClustersRefRemoval",    \
+               "hltIter2HighPtTkMuIsoClustersRefRemoval", \
                "hltIter1HighPtTkMuIsoClustersRefRemoval", \
                "hltIter1L3MuonClustersRefRemoval", \
                "hltIter2L3MuonClustersRefRemoval", \
