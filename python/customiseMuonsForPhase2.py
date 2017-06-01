@@ -2,18 +2,27 @@ import FWCore.ParameterSet.Config as cms
 
 def addGemsToL2(process):
    
-    if hasattr(process,"muonDetIdAssociator") :
-            print "[addGemsToL2] Enable GEM and ME0 in muonDetIdAssociator"
+    objects = [ "muonDetIdAssociator", \
+                "hcalDetIdAssociator", \
+                "caloDetIdAssociator", \
+                "ecalDetIdAssociator", \
+                "preshowerDetIdAssociator", \
+                "hoDetIdAssociator" ]
+ 
+    for obj in objects : 
+        if hasattr(process,obj) :
+            print "[addGemsToL2] Enable GEM and ME0 in", obj
 
-            process.muonDetIdAssociator.includeGEM = True
-            process.muonDetIdAssociator.includeME0 = True
+            getattr(process,obj).includeGEM = True
+            getattr(process,obj).includeME0 = True
 
     if hasattr(process,"HLTMuonLocalRecoSequence") :
         print "[addGemsToL2] Add GEM and ME0 local reco to HLTMuonLocalRecoSequence"
 
         process.load("HLTrigger.Phase2.hlt_gem_local_reco_cff")
 
-        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, process.hltRpcRecHits + process.HLTMuonGemLocalRecoSequence)
+        process.HLTMuonLocalRecoSequence.replace(process.hltRpcRecHits, \
+                                                 process.hltRpcRecHits + process.HLTMuonGemLocalRecoSequence)
 
     if hasattr(process,"hltL2Muons") :
             print "[addGemsToL2] Enable GEM and ME0 in hltL2Muons"
