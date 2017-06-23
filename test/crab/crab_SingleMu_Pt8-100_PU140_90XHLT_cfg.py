@@ -1,7 +1,7 @@
 from WMCore.Configuration import Configuration
 config = Configuration()
 
-sample  = "SingleMu_Pt-8to100_NoPU"
+sample  = "SingleMu_Pt-8to100_PU140"
 version = "v10"
 
 config.section_('General')
@@ -18,10 +18,10 @@ config.JobType.outputFiles = ['step2_inDQM.root']
 
 config.section_('Data')
 
-config.Data.inputDataset = '/SingleMu_FlatPt-8to100/PhaseIISpring17D-NoPU_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
+config.Data.inputDataset = '/SingleMu_FlatPt-8to100/PhaseIISpring17D-PU140_90X_upgrade2023_realistic_v9-v1/GEN-SIM-DIGI-RAW'
 
 config.Data.splitting      = 'FileBased'
-config.Data.unitsPerJob    = 1  # Since files based, 10 files per job
+config.Data.unitsPerJob    = 3  # Since files based, 10 files per job
 config.Data.totalUnits     = 100000
 config.Data.inputDBS       = 'https://cmsweb.cern.ch/dbs/prod/global/DBSReader/'
 config.Data.outLFNDirBase  = '/store/user/battilan/HLTPhase2/prova/'

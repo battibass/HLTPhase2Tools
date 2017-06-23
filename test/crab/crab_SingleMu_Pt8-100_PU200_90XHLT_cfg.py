@@ -2,7 +2,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 sample  = "SingleMu_Pt-8to100_PU200"
-version = "v1"
+version = "v10"
 
 config.section_('General')
 config.General.transferLogs = True
@@ -11,7 +11,7 @@ config.General.requestName = sample + '_Phase2_HLT_Validation_' + version
 
 config.section_('JobType')
 config.JobType.pluginName  = 'Analysis'
-config.JobType.psetName    = 'step2_crab_HLT_Validation.py'
+config.JobType.psetName    = 'step2_HLT_Validation.py'
 config.JobType.outputFiles = ['step2_inDQM.root']
 
 #config.JobType.allowUndistributedCMSSW = True  # To fix cmssw releases

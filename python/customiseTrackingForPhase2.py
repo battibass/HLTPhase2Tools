@@ -6,7 +6,7 @@ def customiseTracking(process):
     process = customiseStripLocalReco(process)
     process = customiseTrackClusterRemoval(process)
     process = customiseTrackerEventProducer(process)
-    process = customiseTkMuTrackerReco(process)
+    process = customiseTkESProducers(process)
     process = customiseL3MuReco(process)
 
     return process
@@ -145,7 +145,7 @@ def customiseTrackerEventProducer(process):
     return process
 
 
-def customiseTkMuTrackerReco(process):
+def customiseTkESProducers(process):
 
     for obj in ["ClusterShapeHitFilterESProducer", \
                 "hltESPMixedStepClusterShapeHitFilter", \
@@ -153,7 +153,7 @@ def customiseTkMuTrackerReco(process):
                 "hltESPTobTecStepClusterShapeHitFilter", \
                 ] :
         if hasattr(process,obj) :
-            print "[customiseTkMuTrackerReco] customise", obj
+            print "[customiseTkESProducers] customise PxelShape file for", obj
 
             getattr(process,obj).PixelShapeFile = cms.string('RecoPixelVertexing/PixelLowPtUtilities/data/pixelShape_Phase2Tk.par')
 
@@ -161,18 +161,9 @@ def customiseTkMuTrackerReco(process):
                 "hltESPTTRHBuilderAngleAndTemplate"] :
 
         if hasattr(process,obj) :
-            print "[customiseTkMuTrackerReco] customise", obj
+            print "[customiseTkESProducers] customise to Phase2 CPE", obj
 
-            # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
             getattr(process,obj).Phase2StripCPE = cms.string('Phase2StripCPE')
-
-    # for obj in ["hltESPTTRHBuilderPixelOnly"] :
-   
-    #     if hasattr(process,obj) :
-    #         print "[customiseTkMuTrackerReco] customise", obj
-
-    #         # process.hltESPTTRHBWithTrackAngle.StripCPE = ""
-    #         getattr(process,obj).Phase2StripCPE = cms.string('Fake')
 
     return process
 
@@ -187,5 +178,85 @@ def customiseL3MuReco(process):
             getattr(process,obj).ignoreVertices = cms.bool(True)
 
     return process
+
+#****************************************
+# Going beyond "technical" migration
+# coping some adjustments from offline 
+# (not really used for now)
+#****************************************
+
+def customiseLayerLists(process):
+
+    import RecoPixelVertexing.PixelTriplets.quadrupletseedmerging_cff
+
+    for obj in ["hltIter1PixelLayerQuadruplets", \
+                "hltPixelLayerQuadruplets", \
+                "hltIter1L3MuonPixelLayerQuadruplets", \
+                "hltIterL3MuonPixelLayerQuadruplets"
+                ] :
+        if hasattr(process,obj) :
+            print "[customiseLayerLists] customise layerList for high / low pT quadruplets", obj
+
+            getattr(process,obj).layerList = \
+                    RecoPixelVertexing.PixelTriplets.quadrupletseedmerging_cff.PixelSeedMergerQuadruplets.layerList.value()
+ 
+    for obj in ["hltIter2L3MuonPixelLayerTriplets", \
+                "hltIter2HighPtTkMuPixelLayerTriplets", \
+                "hltIter2IterL3MuonPixelLayerTriplets", \
+                "hltIter2PixelLayerTriplets"] :
+
+        if hasattr(process,obj) :
+            print "[customiseLayerLists] customise layerList for high pT triplets", obj
+
+            getattr(process,obj).layerList = [ 'BPix1+BPix2+BPix3', 'BPix2+BPix3+BPix4',
+                                               'BPix1+BPix3+BPix4', 'BPix1+BPix2+BPix4',
+                                               'BPix2+BPix3+FPix1_pos', 'BPix2+BPix3+FPix1_neg',
+                                               'BPix1+BPix2+FPix1_pos', 'BPix1+BPix2+FPix1_neg',
+                                               'BPix2+FPix1_pos+FPix2_pos', 'BPix2+FPix1_neg+FPix2_neg',
+                                               'BPix1+FPix1_pos+FPix2_pos', 'BPix1+FPix1_neg+FPix2_neg',
+                                               # 'BPix1+BPix2+FPix2_pos', 'BPix1+BPix2+FPix2_neg',
+                                               'FPix1_pos+FPix2_pos+FPix3_pos', 'FPix1_neg+FPix2_neg+FPix3_neg',
+                                               'BPix1+FPix2_pos+FPix3_pos', 'BPix1+FPix2_neg+FPix3_neg',
+                                               # 'BPix1+FPix1_pos+FPix3_pos', 'BPix1+FPix1_neg+FPix3_neg',
+                                               'FPix2_pos+FPix3_pos+FPix4_pos', 'FPix2_neg+FPix3_neg+FPix4_neg',
+                                               'FPix3_pos+FPix4_pos+FPix5_pos', 'FPix3_neg+FPix4_neg+FPix5_neg',
+                                               'FPix4_pos+FPix5_pos+FPix6_pos', 'FPix4_neg+FPix5_neg+FPix6_neg',
+                                               'FPix5_pos+FPix6_pos+FPix7_pos', 'FPix5_neg+FPix6_neg+FPix7_neg',
+                                               # removed as redunant and covering effectively only eta>4
+                                               # (here for documentation, to be optimized after TDR)
+                                               # 'FPix6_pos+FPix7_pos+FPix8_pos', 'FPix6_neg+FPix7_neg+FPix8_neg',
+                                               # 'FPix6_pos+FPix7_pos+FPix9_pos', 'FPix6_neg+FPix7_neg+FPix9_neg']
+                                             ]
+    return process
+
+def customiseTrackingRegions(process):
+    # Put here as it appears offline, regions are not defined the same way in HLT though ...
+
+    for obj in [""] :
+
+        if hasattr(process,obj) :
+            print "[customiseTrackingRegions] customise region (high pT quadruplets)", obj
+
+            getattr(process,obj).RegionPSet.ptMin = cms.double(0.8)
+
+    for obj in [""] :
+
+        if hasattr(process,obj) :
+            print "[customiseTrackingRegions] customise region (high pT triplets)", obj
+
+            getattr(process,obj).ptMin = cms.double(0.9)
+            getattr(process,obj).originRadius = cms.double(0.9)
+
+
+    for obj in [""] :
+
+        if hasattr(process,obj) :
+            print "[customiseTrackingRegions] customise region (low pT quadruplets)", obj
+
+            getattr(process,obj).RegionPSet.ptMin = cms.double(0.35)
+
+    return process
+
+
 
     

@@ -178,22 +178,25 @@ def printSequence(process,seq,printObj=False) :
     sys.stdout.write(YELLOW)
     print set(eventSetups)
 
-def findByType(process,typeName) :
-    
+def findByType(process,typeName,printObj = False) :
+
+    objects = [] 
     sys.stdout.write(RED)
     print "\n[Checking EDProducers]"
     sys.stdout.write(GREEN)
 
     for name, prod in process.producers_().iteritems() :
         if prod.type_() == typeName :
+            objects.append(prod.label_())
             print "  ", prod.label_()
-
+        
     sys.stdout.write(RED)
     print "\n[Checking EDFilters]"
     sys.stdout.write(GREEN)
 
     for name, prod in process.filters_().iteritems() :
         if prod.type_() == typeName :
+            objects.append(prod.label_())
             print "  ", prod.label_()
 
     sys.stdout.write(RED)
@@ -202,6 +205,7 @@ def findByType(process,typeName) :
 
     for name, prod in process.es_producers_().iteritems() :
         if prod.type_() == typeName :
+            objects.append(prod.label_())
             print "  ", prod.label_()
 
     sys.stdout.write(RED)
@@ -210,7 +214,19 @@ def findByType(process,typeName) :
 
     for name, prod in process.es_sources_().iteritems() :
         if prod.type_() == typeName :
+            objects.append(prod.label_())
             print "  ", prod.label_()
+
+    if printObj :
+
+        sys.stdout.write(RED)
+        print "\n[Printing objects]"
+        sys.stdout.write(BLUE)
+
+        for moduleName in objects :
+            printObject(process,getattr(process,moduleName))
+
+
 
 
 def findByParamValueObjs(process, objects, paramValue, parType = "string") :

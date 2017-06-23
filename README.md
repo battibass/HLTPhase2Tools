@@ -21,8 +21,7 @@ git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
 scramv1 b -j 5
 
-hltGetConfiguration --cff --offline /users/battilan/phaseII/BasicPhase2HLT/V12 --paths HLTriggerFirstPath,HLT_IsoTkMu24_v4,HLT_IsoMu24_v4,HLT_Mu50_v5,HLT_PFJet40_v9,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml &> HLTrigger/Configuration/python/HLT_phaseIIbasic_cff.py
-
+hltGetConfiguration --cff --offline /users/battilan/phaseII/BasicPhase2HLT/V14 --paths HLTriggerFirstPath,HLT_IsoMu27_v5,HLT_TrkIsoMu27_v5,HLT_Mu50_v5,HLT_TkMu50_v5,HLT_PFJet40_v10,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml &> HLTrigger/Configuration/python/HLT_phaseIIFromPhaseIbasic_cff.py
 
 cd HLTrigger/Phase2/test
 
@@ -31,7 +30,7 @@ cd HLTrigger/Phase2/test
 # From runTheMatrix.py  -ne -w upgrade -l 21208.0 (SingleMuPt100 no PU)
 cmsDriver.py SingleMuPt100_pythia8_cfi  --conditions auto:phase2_realistic -n 10 --era Phase2C2 --eventcontent FEVTDEBUG --relval 9000,100 -s GEN,SIM --datatier GEN-SIM --beamspot HLLHC --geometry Extended2023D4
 
-cmsDriver.py step2 --conditions auto:phase2_realistic -s DIGI:pdigi_valid,L1,L1TrackTrigger,DIGI2RAW,HLT:phaseIIbasic --datatier GEN-SIM-DIGI-RAW -n -1 --geometry Extended2023D4 --era Phase2C2 --eventcontent FEVTDEBUGHLT --filein=file:SingleMuPt100_pythia8_cfi_GEN_SIM.root --fileout=file:step2.root --customise HLTrigger/Phase2/customiseForPhase2.customiseTrigger
+cmsDriver.py step2 --conditions auto:phase2_realistic -s DIGI:pdigi_valid,L1,L1TrackTrigger,DIGI2RAW,HLT:phaseIIFromPhaseIbasic --datatier GEN-SIM-DIGI-RAW -n -1 --geometry Extended2023D4 --era Phase2C2 --eventcontent FEVTDEBUGHLT --filein=file:SingleMuPt100_pythia8_cfi_GEN_SIM.root --fileout=file:step2.root --customise HLTrigger/Phase2/customiseForPhase2.customiseTrigger
 
 cmsDriver.py step3  --conditions auto:phase2_realistic -n -1 --era Phase2C2 --eventcontent FEVTDEBUGHLT,MINIAODSIM,DQM --runUnscheduled  -s RAW2DIGI,L1Reco,RECO,PAT,VALIDATION:@phase2Validation+@miniAODValidation,DQM:@phase2+@miniAODDQM --datatier GEN-SIM-RECO,MINIAODSIM,DQMIO --geometry Extended2023D4 --filein=file:step2.root --fileout=file:step3.root --customise HLTrigger/Phase2/customiseForPhase2.customiseRelVal
 

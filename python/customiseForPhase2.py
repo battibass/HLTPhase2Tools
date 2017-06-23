@@ -6,15 +6,13 @@ import HLTrigger.Phase2.customiseValidationForPhase2 as val
 
 def customiseTrigger(process):
 
-    # process = customiseL1Seeds(process)
     process = muons.useRpcSimDigis(process)
     process = muons.addGemsToL2(process)
     process = tracking.customiseTracking(process)
-    # process = muons.removeHLTIsoMu24Steps(process)
-    # process = muons.removeHLTIsoTkMu24Steps(process)
-    # process = muons.removeHLTMu50Steps(process)
+
     process = customiseEventContent(process)
     process = addTrigReport(process)
+    #process.Tracer = cms.Service("Tracer")
 
     return process
 
@@ -28,6 +26,7 @@ def customiseRelVal(process):
 def customiseRelValStep2(process):
 
     process = val.customiseRelValStep2(process)
+    process = addFastTimerService(process)
 
     return process
 
@@ -77,6 +76,46 @@ def addMemoryCheck(process):
 
     return process
 
+def addFastTimerService(process):
+
+    print "[addMemoryCheck] Adding FastTimer service"
+
+    # remove any instance of the FastTimerService
+    if 'FastTimerService' in process.__dict__:
+        del process.FastTimerService
+
+    # instrument the menu with the FastTimerService
+    process.load( "HLTrigger.Timer.FastTimerService_cfi" )
+
+    # print a text summary at the end of the job
+    process.FastTimerService.printEventSummary        = False
+    process.FastTimerService.printRunSummary          = False
+    process.FastTimerService.printJobSummary          = True
+
+    # enable DQM plots
+    process.FastTimerService.enableDQM                = True
+
+    # enable per-module DQM plots
+    process.FastTimerService.enableDQMbyModule        = True
+
+    # enable DQM plots vs lumisection
+    process.FastTimerService.enableDQMbyLumiSection   = False
+    process.FastTimerService.dqmLumiSectionsRange     = 2500    # lumisections (23.31 s)
+
+    # set the time resolution of the DQM plots
+    process.FastTimerService.dqmTimeRange             = 1000.   # ms
+    process.FastTimerService.dqmTimeResolution        =    5.   # ms
+    process.FastTimerService.dqmPathTimeRange         =  100.   # ms
+    process.FastTimerService.dqmPathTimeResolution    =    0.5  # ms
+    process.FastTimerService.dqmModuleTimeRange       =   40.   # ms
+    process.FastTimerService.dqmModuleTimeResolution  =    0.2  # ms
+
+    # set the base DQM folder for the plots
+    process.FastTimerService.dqmPath                  = "HLT/TimerService"
+    process.FastTimerService.enableDQMbyProcesses     = False
+
+    return process
+
 def customiseEventContent(process):
 
     if hasattr(process,"FEVTDEBUGHLToutput") :
@@ -115,6 +154,7 @@ def customiseL1Seeds( process):
                                          cms.ignore(process.hltL1fL1sMu22Or25L1Filtered0))
 
     return process
+
 
 
         

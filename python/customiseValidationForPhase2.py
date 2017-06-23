@@ -36,11 +36,11 @@ def getMuonValidationSequence(process, debug = True):
 
     # Tracker muons final merging
     process.tpToTkMuMuonAssociation = process.tpToL3TkMuonAssociation.clone()
-    process.tpToTkMuMuonAssociation.tracksTag = cms.InputTag("hltIter2Merged")
+    process.tpToTkMuMuonAssociation.tracksTag = cms.InputTag("hltIter2HighPtTkMuMerged")
 
     process.TkMuMuonMuTrackV = process.l3TkMuonMuTrackV.clone()
     process.TkMuMuonMuTrackV.associatormap = 'tpToTkMuMuonAssociation'
-    process.TkMuMuonMuTrackV.label = cms.VInputTag("hltIter2Merged")
+    process.TkMuMuonMuTrackV.label = cms.VInputTag("hltIter2HighPtTkMuMerged")
 
     if debug :
         # Tracker muons iteration seeds (pixel tracks)
@@ -84,42 +84,63 @@ def getMuonValidationSequence(process, debug = True):
         process.l3MuonTracksOIMuonV.associatormap = 'tpToL3MuonTracksOIMuonAssociation'
         process.l3MuonTracksOIMuonV.label = cms.VInputTag("hltIterL3OIMuCtfWithMaterialTracks")
 
+        process.tpToL3MuonTracksOIMuonAssociationHP = process.tpToL3TkMuonAssociation.clone()
+        process.tpToL3MuonTracksOIMuonAssociationHP.tracksTag = cms.InputTag("hltIterL3OIMuonTrackSelectionHighPurity")
+
+        process.l3MuonTracksOIMuonVHP = process.l3TkMuonMuTrackV.clone()
+        process.l3MuonTracksOIMuonVHP.associatormap = 'tpToL3MuonTracksOIMuonAssociationHP'
+        process.l3MuonTracksOIMuonVHP.label = cms.VInputTag("hltIterL3OIMuonTrackSelectionHighPurity")
+
 
     process.hltMu50L2Filter_seq = getFilterValidationSequence(process, \
                                                               "hltMu50l2Filter", \
                                                               "hltL2fL1sMu22Or25L1f0L2Filtered10Q", \
-                                                              53. ,\
+                                                              55. ,\
                                                               process.tpToL2MuonAssociation, \
                                                               process.l2MuonMuTrackV)
 
     process.hltMu50L3Filter_seq = getFilterValidationSequence(process, \
                                                               "hltMu50l3Filter", \
                                                               "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered50Q", \
-                                                              53. ,\
+                                                              55. ,\
                                                               process.tpToL3MuonAssociation, \
                                                               process.l3MuonMuTrackV)
 
-    process.hltIsoMu24L2Filter_seq = getFilterValidationSequence(process, \
-                                                                 "hltIsoMu24l2Filter", \
-                                                                 "hltL2fL1sMu22L1f0L2Filtered10Q", \
-                                                                 25. ,\
-                                                                 process.tpToL2MuonAssociation, \
-                                                                 process.l2MuonMuTrackV)
-
-    process.hltIsoMu24L3Filter_seq = getFilterValidationSequence(process, \
-                                                                 "hltIsoMu24l3Filter", \
-                                                                 "hltL3fL1sMu22L1f0L2f10QL3Filtered24Q", \
-                                                                 25. ,\
-                                                                 process.tpToL3MuonAssociation, \
-                                                                 process.l3MuonMuTrackV)
-
-    process.hltIsoMu24IsoFilter_seq = getFilterValidationSequence(process, \
-                                                                  "hltIsoMu24IsoFilter", \
-                                                                  "hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09", \
-                                                                  25. ,\
+    process.hltTkMu50TkMuFilter_seq = getFilterValidationSequence(process, \
+                                                                  "hltTkMu50TkMuFilter", \
+                                                                  "hltL3fL1sMu25f0TkFiltered50Q", \
+                                                                  55. ,\
                                                                   process.tpToL3MuonAssociation, \
                                                                   process.l3MuonMuTrackV)
 
+
+    process.hltIsoMu27L2Filter_seq = getFilterValidationSequence(process, \
+                                                                 "hltIsoMu27l2Filter", \
+                                                                 "hltL2fL1sMu22Or25L1f0L2Filtered10Q", \
+                                                                 30. ,\
+                                                                 process.tpToL2MuonAssociation, \
+                                                                 process.l2MuonMuTrackV)
+
+    process.hltIsoMu27L3Filter_seq = getFilterValidationSequence(process, \
+                                                                 "hltIsoMu27l3Filter", \
+                                                                 "hltL3fL1sMu22Or25L1f0L2f10QL3Filtered27Q", \
+                                                                 30. ,\
+                                                                 process.tpToL3MuonAssociation, \
+                                                                 process.l3MuonMuTrackV)
+
+    process.hltIsoMu27IsoFilter_seq = getFilterValidationSequence(process, \
+                                                                  "hltIsoMu27IsoFilter", \
+                                                                  "hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p09", \
+                                                                  30. ,\
+                                                                  process.tpToL3MuonAssociation, \
+                                                                  process.l3MuonMuTrackV)
+
+    process.hltIsoMu27TrkIsoFilter_seq = getFilterValidationSequence(process, \
+                                                                     "hltTrkIsoMu27IsoFilter", \
+                                                                     "hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoOnlyFiltered0p09", 
+                                                                      30. ,\
+                                                                      process.tpToL3MuonAssociation, \
+                                                                      process.l3MuonMuTrackV)
     
     muonValidationHLTPhase2_seq = cms.Sequence( process.tpToL2MuonAssociation 
                                                 + process.l2MuonMuTrackV
@@ -134,10 +155,13 @@ def getMuonValidationSequence(process, debug = True):
 
                                                 + process.hltMu50L2Filter_seq
                                                 + process.hltMu50L3Filter_seq
+                                                + process.hltTkMu50TkMuFilter_seq
 
-                                                + process.hltIsoMu24L2Filter_seq
-                                                + process.hltIsoMu24L3Filter_seq
-                                                + process.hltIsoMu24IsoFilter_seq
+                                                + process.hltIsoMu27L2Filter_seq
+                                                + process.hltIsoMu27L3Filter_seq
+                                                + process.hltIsoMu27IsoFilter_seq
+                                                + process.hltIsoMu27TrkIsoFilter_seq
+
 
                                                 # + process.hltMuonValidator
                                                 # + process.muonFullOfflineDQM
@@ -148,8 +172,8 @@ def getMuonValidationSequence(process, debug = True):
         muonValidationHLTPhase2_seq.replace(process.l3MuonTracksMergedMuonV,
                                             process.l3MuonTracksMergedMuonV
 
-                                            + process.tpToPTkMuMuonAssociation 
-                                            + process.PTkMuMuonMuTrackV
+                                            #+ process.tpToPTkMuMuonAssociation 
+                                            #+ process.PTkMuMuonMuTrackV
                                             + process.tpToTkMuIter0MuonAssociation 
                                             + process.TkMuIter0MuonMuTrackV
                                             + process.tpToTkMuIter2MuonAssociation 
@@ -157,6 +181,9 @@ def getMuonValidationSequence(process, debug = True):
 
                                             + process.tpToL3MuonTracksOIMuonAssociation
                                             + process.l3MuonTracksOIMuonV
+
+                                            + process.tpToL3MuonTracksOIMuonAssociationHP
+                                            + process.l3MuonTracksOIMuonVHP                                            
                                             )
 
 
@@ -262,7 +289,7 @@ def customiseRelValStep2(process):
         process.LhcParametersDefinerForTP.beamSpot = "hltOnlineBeamSpot"
     
 
-        process.muonHLTValidationPhase2_seq   = getMuonValidationSequence(process,False)
+        process.muonHLTValidationPhase2_seq   = getMuonValidationSequence(process,True)
         process.jetMETHLTValidationPhase2_seq = getJetMETValidationSequence(process)
         
         
