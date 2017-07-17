@@ -1,0 +1,130 @@
+{
+    "HLT_TrkIsoMu27"   :
+    {
+        "comment"   : "Look at example2 to understand the config parameters.",
+        "inputs"    :
+        {
+             "1 L2"   :
+            {
+                "label"             : "L1+L2",
+                "legendEntry"       : "L1+L2",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltIsoMu27l2Filter",
+                "plot"		    : "effic"
+            },
+             "2 L3"   :
+            {
+                "label"             : "L1+L2+L3",
+                "legendEntry"       : "L1+L2+L3",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltIsoMu27l3Filter",
+                "plot"		    : "effic"
+            },
+             "3 Iso"   :
+            {
+                "label"             : "L1+L2+L3+TrkIso",
+                "legendEntry"       : "L1+L2+L3+TrkIso",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltTrkIsoMu27IsoFilter",
+                "plot"		    : "effic"
+            }
+        },
+        "plot"      :
+        {
+            "x"                 : [-2.4, 2.4, "Muon eta"],
+            "y"                 : [0.65, 1.15, "Efficiency"],
+            "legendTitle"       : "TrkIsoMu27 HLT, p_{T} > 30 GeV, <PU> = 200",
+            "caption"           : "Phase2 Simulation",
+            "logo"              : ["CMS", "Preliminary"],
+            "colorMap"          : [1, 4, 2, 3, 5, 6, 7, 8, 9],
+            "markerMap"         : [20, 21, 22, 23, 24, 25, 26]
+        },
+        "output"    :
+        {
+            "directory"         : "results/HLT_TrkIsoMu27/",
+            "filenamePlot"     : "eff_vs_eta_L2_L3_TkIso",
+            "fileType"          : ["png", "pdf"]
+        }
+    },
+
+    "HLT_Mu50"   :
+    {
+        "comment"   : "Look at example2 to understand the config parameters.",
+        "inputs"    :
+        {
+             "1 L2"   :
+            {
+                "label"             : "L1+L2",
+                "legendEntry"       : "L1+L2",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltMu50l2Filter",
+                "plot"		    : "effic"
+            },
+             "2 L3"   :
+            {
+                "label"             : "L1+L2+L3",
+                "legendEntry"       : "L1+L2+L3",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltMu50l3Filter",
+                "plot"		    : "effic"
+            }
+        },
+        "plot"      :
+        {
+            "x"                 : [-2.4, 2.4, "Muon eta"],
+            "y"                 : [0.65, 1.15, "Efficiency"],
+            "legendTitle"       : "Mu50 HLT, p_{T} > 55 GeV, <PU> = 200",
+            "caption"           : "Phase2 Simulation",
+            "logo"              : ["CMS", "Preliminary"],
+            "colorMap"          : [1, 4, 2, 3, 5, 6, 7, 8, 9],
+            "markerMap"         : [20, 21, 22, 23, 24, 25, 26]
+        },
+        "output"    :
+        {
+            "directory"         : "results/HLT_Mu50",
+            "filenamePlot"     : "eff_vs_eta_L2_L3",
+            "fileType"          : ["png", "pdf"]
+        }
+    },
+
+    "HLT_MuVsTkMu"   :
+    {
+        "comment"   : "Look at example2 to understand the config parameters.",
+        "inputs"    :
+        {
+             "1 L3 "   :
+            {
+                "label"             : "IterL3",
+                "legendEntry"       : "IterL3",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltIterL3MuonMerged",
+                "plot"		    : "effic"
+            },
+             "2 TkMu"   :
+            {
+                "label"             : "TkMu",
+                "legendEntry"       : "TkMu",
+                "filename"          : "../crab/DQM_V0001_R000000001__200PU__CMSSW_9_0_3_v1__DQM.root",
+                "folder"            : "/DQMData/Run 1/HLT/Run summary/Muon/MultiTrack/hltIter2HighPtTkMuMerged",
+                "plot"		    : "effic"
+            }
+        },
+        "plot"      :
+        {
+            "x"                 : [-2.4, 2.4, "Muon eta"],
+            "y"                 : [0.45, 1.15, "Efficiency"],
+            "legendTitle"       : "No p_{T} cut, <PU> = 200",
+            "caption"           : "Phase2 Simulation",
+            "logo"              : ["CMS", "Preliminary"],
+            "colorMap"          : [1, 4, 2, 3, 5, 6, 7, 8, 9],
+            "markerMap"         : [20, 21, 22, 23, 24, 25, 26]
+        },
+        "output"    :
+        {
+            "directory"         : "results/HLT_MuVsTkMu",
+            "filenamePlot"     : "eff_vs_eta",
+            "fileType"          : ["png", "pdf"]
+        }
+    }
+
+}   
