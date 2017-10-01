@@ -21,7 +21,7 @@ git clone https://github.com/battibass/HLTPhase2Tools/ HLTrigger/Phase2
 
 scramv1 b -j 5
 
-hltGetConfiguration --cff --offline /users/battilan/phaseII/BasicPhase2HLT/V14 --paths HLTriggerFirstPath,HLT_IsoMu27_v5,HLT_TrkIsoMu27_v5,HLT_Mu50_v5,HLT_TkMu50_v5,HLT_PFJet40_v10,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml &> HLTrigger/Configuration/python/HLT_phaseIIFromPhaseIbasic_cff.py
+hltGetConfiguration --cff --offline /users/battilan/phaseII/BasicPhase2HLTFromPhase1V14 --paths HLTriggerFirstPath,HLT_IsoMu27_v5,HLT_TrkIsoMu27_v5,HLT_Mu50_v5,HLT_TkMu50_v5,HLT_PFJet40_v10,HLTriggerFinalPath --unprescale --l1=L1Menu_Collisions2016_v9_m2_xml &> HLTrigger/Configuration/python/HLT_phaseIIFromPhaseIbasic_cff.py
 
 cd HLTrigger/Phase2/test
 
